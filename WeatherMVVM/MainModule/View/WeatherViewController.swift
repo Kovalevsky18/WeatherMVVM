@@ -9,6 +9,11 @@
 import UIKit
 import Framezilla
 
+private enum Constants {
+    static let insets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
+    static let fontSize: CGFloat = 30
+}
+
 class ViewController: UIViewController {
     
     private(set) lazy var imageView: UIImageView = {
@@ -20,7 +25,7 @@ class ViewController: UIViewController {
     private(set) lazy var cityLabel: UILabel = {
         var label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont(name: AppConfiguration.font, size: 30)
+        label.font = UIFont(name: AppConfiguration.font, size: Constants.fontSize)
         label.text = "Minsk,Belarus"
         return label
     }()
@@ -28,7 +33,7 @@ class ViewController: UIViewController {
     private(set) lazy var temperatureLabel: UILabel = {
         var label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont(name: AppConfiguration.font, size: 30)
+        label.font = UIFont(name: AppConfiguration.font, size: Constants.fontSize)
         label.textColor = .blue
         label.text = "22°, sunny"
         return label
@@ -84,13 +89,13 @@ class ViewController: UIViewController {
             maker.width(130)
         }
         cityLabel.configureFrame { (maker) in
-            maker.top(to: imageView.nui_bottom, inset: 10)
+            maker.top(to: imageView.nui_bottom, inset: Constants.insets.top)
             maker.centerX()
             maker.width(200)
             maker.sizeToFit()
         }
         temperatureLabel.configureFrame { (maker) in
-            maker.top(to: cityLabel.nui_bottom, inset: 10)
+            maker.top(to: cityLabel.nui_bottom, inset: Constants.insets.top)
             maker.centerX()
             maker.width(200)
             maker.sizeToFit()
@@ -102,7 +107,7 @@ class ViewController: UIViewController {
             maker.sizeToFit()
         }
         collectionView.configureFrame { (maker) in
-            maker.top(to: shareButton.nui_bottom, inset: 10)
+            maker.top(to: shareButton.nui_bottom, inset: Constants.insets.top)
             maker.width(view.bounds.width)
             maker.bottom(to: view.nui_bottom)
         }

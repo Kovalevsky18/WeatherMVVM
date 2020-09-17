@@ -8,11 +8,16 @@
 
 import UIKit
 
+private enum Constants {
+    static let insets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
+    static let fontSize: CGFloat = 25
+}
+
 class CollectionViewCell: UICollectionViewCell {
     
     private(set) lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: AppConfiguration.font, size: 20)
+        label.font = UIFont(name: AppConfiguration.font, size: Constants.fontSize)
         label.textAlignment = .center
         label.text = "Saturday"
         return label
@@ -26,7 +31,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     private(set) lazy var temperatureLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: AppConfiguration.font, size: 20)
+        label.font = UIFont(name: AppConfiguration.font, size: Constants.fontSize)
         label.textAlignment = .center
         label.textColor = .blue
         label.text = "17°"
@@ -49,7 +54,7 @@ class CollectionViewCell: UICollectionViewCell {
         super.layoutSubviews()
         
         dateLabel.configureFrame { (maker) in
-            maker.top(inset: 10)
+            maker.top(inset: Constants.insets.top)
             maker.centerX()
             maker.width(150)
             maker.sizeToFit()
@@ -60,7 +65,7 @@ class CollectionViewCell: UICollectionViewCell {
             maker.width(80)
         }
         temperatureLabel.configureFrame { (maker) in
-            maker.bottom(inset: 10)
+            maker.bottom(inset: Constants.insets.bottom)
             maker.width(100)
             maker.centerX()
             maker.sizeToFit()
