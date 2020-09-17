@@ -1,0 +1,16 @@
+PODS:
+  - Framezilla (2.9.1)
+
+DEPENDENCIES:
+  - Framezilla
+
+SPEC REPOS:
+  trunk:
+    - Framezilla
+
+SPEC CHECKSUMS:
+  Framezilla: 47d52b1986bddf580da55ba77189ef654ebdc731
+
+PODFILE CHECKSUM: 5fff75132d9752fbe68620676c4908e4d4f1e8af
+
+COCOAPODS: 1.9.3
