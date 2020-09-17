@@ -12,6 +12,7 @@ import Framezilla
 private enum Constants {
     static let insets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
     static let fontSize: CGFloat = 30
+    static let size = 44
 }
 
 class ViewController: UIViewController {
@@ -71,6 +72,24 @@ class ViewController: UIViewController {
         return collectionView
     }()
     
+    private(set) lazy var activityView: UIActivityIndicatorView = {
+        let activityView = UIActivityIndicatorView()
+        activityView.style = .large
+        activityView.hidesWhenStopped = true
+        activityView.color = .white
+        activityView.isHidden = false
+        return activityView
+    }()
+    
+    private(set) lazy var blur: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.autoresizingMask = [.flexibleWidth,
+                                           .flexibleHeight]
+        return blurEffectView
+    }()
+    
+    
     var data: WeatherData.Weather?
     
     private var viewModel: WeatherViewModelProtocol?
@@ -83,6 +102,8 @@ class ViewController: UIViewController {
         view.addSubview(temperatureLabel)
         view.addSubview(shareButton)
         view.addSubview(collectionView)
+        view.addSubview(blur)
+        view.addSubview(activityView)
         viewModel = WeatherViewModel()
         viewModel?.startFetch()
         updateViewModel()
@@ -118,6 +139,15 @@ class ViewController: UIViewController {
             maker.width(view.bounds.width)
             maker.bottom(to: view.nui_bottom)
         }
+        activityView.configureFrame { (maker) in
+            maker.center()
+            maker.height(Constants.size)
+            maker.width(Constants.size)
+        }
+        blur.configureFrame { (maker) in
+            maker.edges(insets: .zero)
+        }
+        
     }
     
     func updateViewModel() {
@@ -126,9 +156,11 @@ class ViewController: UIViewController {
             case .inital:
                 print("initial")
             case .loading:
-                //activity indicator
-                print("loading")
+                self?.activityView.startAnimating()
             case .success(let weatherData):
+                self?.blur.isHidden = true
+                self?.activityView.stopAnimating()
+                
                 self?.data = weatherData
                 
                 guard let icon = weatherData.current?.weather.first?.icon,
