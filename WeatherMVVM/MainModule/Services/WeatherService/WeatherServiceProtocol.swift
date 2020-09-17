@@ -11,5 +11,5 @@ import Foundation
 protocol  WeatherServiceProtocol: class {
     
     func fetchWeather(lat: Double, long: Double, success: @escaping (WeatherData.Weather?) -> Void,
-                     failure: @escaping (Error) -> Void)
+                      failure: @escaping (Error) -> Void)
 }

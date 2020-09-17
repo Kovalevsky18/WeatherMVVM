@@ -34,9 +34,9 @@ extension WeatherEndpoint: Endpoint {
         case .weather(let lat, let long):
             return ["appid": AppConfiguration.apiKey,
                     "lat": "\(lat)",
-                    "lon": "\(long)",
-                    "exclude": "hourly",
-                    "units": "metric" ]
+                "lon": "\(long)",
+                "exclude": "hourly",
+                "units": "metric" ]
         }
     }
     

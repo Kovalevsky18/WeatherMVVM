@@ -23,7 +23,7 @@ class LocationManager: NSObject,CLLocationManagerDelegate {
     private var locationCompletionHandler: LocationClosure?
     
     private var locationManager:CLLocationManager?
-   
+    
     private var lastLocation:CLLocation?
     
     static let sharedInstance: LocationManager = {
@@ -31,14 +31,14 @@ class LocationManager: NSObject,CLLocationManagerDelegate {
         return instance
     }()
     
-
+    
     deinit {
         destroyLocationManager()
     }
     
     //MARK:- Private Methods
     private func setupLocationManager() {
-
+        
         locationManager = nil
         locationManager = CLLocationManager()
         locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
@@ -73,22 +73,22 @@ class LocationManager: NSObject,CLLocationManagerDelegate {
         lastLocation = nil
     }
     
-
+    
     func getLocation(completionHandler:@escaping LocationClosure) {
         
         //Cancelling the previous selector handlers if any
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         
-    
+        
         lastLocation = nil
         
         self.locationCompletionHandler = completionHandler
         
         setupLocationManager()
     }
-
     
-   
+    
+    
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         lastLocation = locations.last
@@ -100,7 +100,7 @@ class LocationManager: NSObject,CLLocationManagerDelegate {
             
         case .authorizedWhenInUse,.authorizedAlways:
             self.locationManager?.startUpdatingLocation()
-                startThread()
+            startThread()
         case .denied:
             let deniedError = NSError(
                 domain: self.classForCoder.description(),
@@ -109,18 +109,18 @@ class LocationManager: NSObject,CLLocationManagerDelegate {
                 [NSLocalizedDescriptionKey:LocationErrors.denied.rawValue,
                  NSLocalizedFailureReasonErrorKey:LocationErrors.denied.rawValue,
                  NSLocalizedRecoverySuggestionErrorKey:LocationErrors.denied.rawValue])
-                didComplete(location: nil,error: deniedError)
+            didComplete(location: nil,error: deniedError)
         case .restricted:
-                didComplete(location: nil,error: NSError(
-                    domain: self.classForCoder.description(),
-                    code:Int(CLAuthorizationStatus.restricted.rawValue),
-                    userInfo: nil))
+            didComplete(location: nil,error: NSError(
+                domain: self.classForCoder.description(),
+                code:Int(CLAuthorizationStatus.restricted.rawValue),
+                userInfo: nil))
             break
             
         case .notDetermined:
             self.locationManager?.requestWhenInUseAuthorization()
             break
-    }
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -135,5 +135,5 @@ class LocationManager: NSObject,CLLocationManagerDelegate {
         locationManager?.delegate = nil
         locationManager = nil
     }
-
+    
 }
