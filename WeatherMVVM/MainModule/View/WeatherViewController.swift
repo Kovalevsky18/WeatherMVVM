@@ -25,7 +25,8 @@ class ViewController: UIViewController {
     private(set) lazy var cityLabel: UILabel = {
         var label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont(name: AppConfiguration.font, size: Constants.fontSize)
+        label.font = UIFont(name: AppConfiguration.font,
+                            size: Constants.fontSize)
         label.text = "Minsk,Belarus"
         return label
     }()
@@ -33,7 +34,8 @@ class ViewController: UIViewController {
     private(set) lazy var temperatureLabel: UILabel = {
         var label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont(name: AppConfiguration.font, size: Constants.fontSize)
+        label.font = UIFont(name: AppConfiguration.font,
+                            size: Constants.fontSize)
         label.textColor = .blue
         label.text = "22°, sunny"
         return label
@@ -47,7 +49,11 @@ class ViewController: UIViewController {
             .foregroundColor: UIColor.orange ]
         let title = NSAttributedString(string: titleValue,
                                        attributes: attributes)
-        button.setAttributedTitle(title, for: .normal)
+        button.setAttributedTitle(title,
+                                  for: .normal)
+        button.addTarget(self,
+                         action: #selector(shareButtonAction),
+                         for: .touchUpInside)
         return button
     }()
     
@@ -56,7 +62,8 @@ class ViewController: UIViewController {
         layout.minimumLineSpacing = 5
         layout.minimumInteritemSpacing = 5
         layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: .zero,
+                                              collectionViewLayout: layout)
         collectionView.backgroundColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -67,7 +74,7 @@ class ViewController: UIViewController {
     var data: WeatherData.Weather?
     
     private var viewModel: WeatherViewModelProtocol?
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -125,19 +132,32 @@ class ViewController: UIViewController {
                 self?.data = weatherData
                 
                 guard let icon = weatherData.current?.weather.first?.icon,
-                let temp = weatherData.current?.temp,
-                let tempInfo = weatherData.current?.weather.first?.main,
-                let city = weatherData.timezone
-                else { return }
+                    let temp = weatherData.current?.temp,
+                    let tempInfo = weatherData.current?.weather.first?.main,
+                    let city = weatherData.timezone
+                    else { return }
                 
                 self?.imageView.image = UIImage(named: icon)
                 self?.temperatureLabel.text =  "\(String(Int(temp)))°, " + tempInfo
                 self?.cityLabel.text = city
+                
+                let shareText = "City: \(city)" +
+                "\nTemperature: \(String(temp))°, \(tempInfo) "
+                UserDefaults.standard.set(shareText, forKey: "shareText")
             }
             
             self?.collectionView.reloadData()
         }
     }
+    
+    @objc private func shareButtonAction() {
+        let text = UserDefaults.standard.value(forKey: "shareText")
+        let textShare = [ text ]
+        let activityViewController = UIActivityViewController(activityItems: textShare as [Any] , applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+    
 }
 
 extension ViewController: UICollectionViewDataSource {

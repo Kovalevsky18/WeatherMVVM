@@ -17,7 +17,8 @@ class CollectionViewCell: UICollectionViewCell {
     
     private(set) lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: AppConfiguration.font, size: Constants.fontSize)
+        label.font = UIFont(name: AppConfiguration.font,
+                            size: Constants.fontSize)
         label.textAlignment = .center
         label.text = "Saturday"
         return label
@@ -31,7 +32,8 @@ class CollectionViewCell: UICollectionViewCell {
     
     private(set) lazy var temperatureLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: AppConfiguration.font, size: Constants.fontSize)
+        label.font = UIFont(name: AppConfiguration.font,
+                            size: Constants.fontSize)
         label.textAlignment = .center
         label.textColor = .blue
         label.text = "17°"
