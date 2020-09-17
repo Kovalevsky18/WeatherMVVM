@@ -32,6 +32,7 @@
 		FBC4C096250FE58200E48383 /* WeatherServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC4C095250FE58200E48383 /* WeatherServiceProtocol.swift */; };
 		FBC4C098250FE5BF00E48383 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC4C097250FE5BF00E48383 /* WeatherService.swift */; };
 		FBC4C09A250FF0A100E48383 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC4C099250FF0A100E48383 /* LocationManager.swift */; };
+		FBE86ABB2513687400EDDA83 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE86ABA2513687400EDDA83 /* Date.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		FBC4C095250FE58200E48383 /* WeatherServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherServiceProtocol.swift; sourceTree = "<group>"; };
 		FBC4C097250FE5BF00E48383 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
 		FBC4C099250FF0A100E48383 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		FBE86ABA2513687400EDDA83 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +201,7 @@
 		FBC4C076250F9BDB00E48383 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				FBE86AB92513685D00EDDA83 /* Foundation */,
 				FBC4C08E250FE2C400E48383 /* UIKit */,
 				FBC4C089250FE17A00E48383 /* Codable */,
 			);
@@ -247,6 +250,14 @@
 				FBC4C099250FF0A100E48383 /* LocationManager.swift */,
 			);
 			path = Location;
+			sourceTree = "<group>";
+		};
+		FBE86AB92513685D00EDDA83 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				FBE86ABA2513687400EDDA83 /* Date.swift */,
+			);
+			path = Foundation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -383,6 +394,7 @@
 				FBC4C08B250FE1CB00E48383 /* JSONDecode+Decode.swift in Sources */,
 				FBC4C080250FDEC700E48383 /* Daily.swift in Sources */,
 				FBC4C086250FE0A100E48383 /* Endpoint.swift in Sources */,
+				FBE86ABB2513687400EDDA83 /* Date.swift in Sources */,
 				FBC4C088250FE12400E48383 /* NetworkService.swift in Sources */,
 				FBC4C084250FDEED00E48383 /* Temp.swift in Sources */,
 			);

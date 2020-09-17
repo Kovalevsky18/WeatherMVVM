@@ -12,7 +12,8 @@ class CollectionViewCell: UICollectionViewCell {
     
     private(set) lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont(name: AppConfiguration.font, size: 20)
+        label.textAlignment = .center
         label.text = "Saturday"
         return label
     }()
@@ -25,7 +26,9 @@ class CollectionViewCell: UICollectionViewCell {
     
     private(set) lazy var temperatureLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont(name: AppConfiguration.font, size: 20)
+        label.textAlignment = .center
+        label.textColor = .blue
         label.text = "17°"
         return label
     }()
@@ -48,14 +51,17 @@ class CollectionViewCell: UICollectionViewCell {
         dateLabel.configureFrame { (maker) in
             maker.top(inset: 10)
             maker.centerX()
+            maker.width(150)
             maker.sizeToFit()
         }
         imageView.configureFrame { (maker) in
             maker.center()
-            maker.sizeToFit()
+            maker.height(100)
+            maker.width(80)
         }
         temperatureLabel.configureFrame { (maker) in
             maker.bottom(inset: 10)
+            maker.width(100)
             maker.centerX()
             maker.sizeToFit()
         }

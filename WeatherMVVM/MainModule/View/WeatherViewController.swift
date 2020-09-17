@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     private(set) lazy var cityLabel: UILabel = {
         var label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont(name: "Avenir LT 55 Roman", size: 30)
+        label.font = UIFont(name: AppConfiguration.font, size: 30)
         label.text = "Minsk,Belarus"
         return label
     }()
@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     private(set) lazy var temperatureLabel: UILabel = {
         var label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont(name: "Avenir LT 55 Roman", size: 30)
+        label.font = UIFont(name: AppConfiguration.font, size: 30)
         label.textColor = .blue
         label.text = "22°, sunny"
         return label
@@ -62,10 +62,7 @@ class ViewController: UIViewController {
     var data: WeatherData.Weather?
     
     private var viewModel: WeatherViewModelProtocol?
-    
-    override func viewWillAppear(_ animated: Bool) {
-    }
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -85,7 +82,6 @@ class ViewController: UIViewController {
             maker.centerX()
             maker.height(200)
             maker.width(130)
-            maker.sizeToFit()
         }
         cityLabel.configureFrame { (maker) in
             maker.top(to: imageView.nui_bottom, inset: 10)
@@ -122,9 +118,16 @@ class ViewController: UIViewController {
                 print("loading")
             case .success(let weatherData):
                 self?.data = weatherData
-                self?.imageView.image = UIImage(named: weatherData.current?.weather.first?.icon ?? "")
-                self?.temperatureLabel.text =  "\(String(Int(weatherData.current!.temp)))°, " +  (weatherData.current?.weather.first!.main ?? "")
-                self?.cityLabel.text = weatherData.timezone
+                
+                guard let icon = weatherData.current?.weather.first?.icon,
+                let temp = weatherData.current?.temp,
+                let tempInfo = weatherData.current?.weather.first?.main,
+                let city = weatherData.timezone
+                else { return }
+                
+                self?.imageView.image = UIImage(named: icon)
+                self?.temperatureLabel.text =  "\(String(Int(temp)))°, " + tempInfo
+                self?.cityLabel.text = city
             }
             
             self?.collectionView.reloadData()
@@ -143,23 +146,14 @@ extension ViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: CollectionViewCell = collectionView.dequeueReusableCell(for: indexPath)
-        guard let daily = data?.daily else { return cell }
         
         guard let date = data?.daily?[indexPath.row].dt,
             let icon = data?.daily?[indexPath.row].weather.first?.icon,
             let temperature = data?.daily?[indexPath.row].temp.day
             else{ return cell }
         
-        var weekday: String {
-            let newData = TimeInterval(date)
-            let date = Date(timeIntervalSince1970: newData)
-            let formatter = DateFormatter()
-            formatter.dateFormat = "EEEE"
-            return formatter.string(from: date)
-        }
-        
         cell.imageView.image = UIImage(named: icon)
-        cell.dateLabel.text = String(weekday)
+        cell.dateLabel.text = date.weekday()
         cell.temperatureLabel.text = String(describing: Int(temperature)) + "°"
         return cell
     }
