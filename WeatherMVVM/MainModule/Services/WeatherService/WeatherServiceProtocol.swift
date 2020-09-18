@@ -12,4 +12,8 @@ protocol  WeatherServiceProtocol: class {
     
     func fetchWeather(lat: Double, long: Double, success: @escaping (WeatherData.Weather?) -> Void,
                       failure: @escaping (Error) -> Void)
+    
+    func fetchCityWeather(city: String, success: @escaping (WeatherCity.CityWeather?) -> Void,
+                          failure: @escaping (Error) -> Void)
+    
 }

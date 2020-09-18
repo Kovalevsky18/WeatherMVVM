@@ -89,6 +89,18 @@ class ViewController: UIViewController {
         return blurEffectView
     }()
     
+    private(set) lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.searchBarStyle = UISearchBar.Style.prominent
+        searchBar.placeholder = " Search..."
+        searchBar.sizeToFit()
+        searchBar.isTranslucent = false
+        searchBar.backgroundImage = UIImage()
+        searchBar.delegate = self
+        navigationItem.titleView = searchBar
+        return searchBar
+    }()
+    
     
     var data: WeatherData.Weather?
     
@@ -97,6 +109,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        view.addSubview(searchBar)
         view.addSubview(imageView)
         view.addSubview(cityLabel)
         view.addSubview(temperatureLabel)
@@ -110,8 +123,12 @@ class ViewController: UIViewController {
     }
     
     override func viewWillLayoutSubviews() {
+        searchBar.configureFrame { (maker) in
+            maker.centerX()
+            maker.top(inset: 30)
+        }
         imageView.configureFrame { (maker) in
-            maker.top(inset: 50)
+            maker.top(to: searchBar.nui_bottom, inset: 50)
             maker.centerX()
             maker.height(200)
             maker.width(130)
@@ -192,6 +209,15 @@ class ViewController: UIViewController {
     
 }
 
+extension ViewController: UISearchBarDelegate,UISearchDisplayDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let city = searchBar.text else { return }
+        print(city)
+    }
+    
+}
+
 extension ViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -217,6 +243,7 @@ extension ViewController: UICollectionViewDataSource {
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width * 0.5, height: collectionView.bounds.height * 0.8 )
     }

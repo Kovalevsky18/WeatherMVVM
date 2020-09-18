@@ -10,6 +10,7 @@ import Foundation
 
 enum WeatherEndpoint {
     case weather(lat: Double, long: Double)
+    case cityWeather(city: String)
 }
 
 enum PathEndpoint {
@@ -26,6 +27,9 @@ extension WeatherEndpoint: Endpoint {
         switch self {
         case .weather( _, _):
             return "data/2.5/onecall"
+        case .cityWeather( _):
+            return "data/2.5/forecast"
+            
         }
     }
     
@@ -34,9 +38,12 @@ extension WeatherEndpoint: Endpoint {
         case .weather(let lat, let long):
             return ["appid": AppConfiguration.apiKey,
                     "lat": "\(lat)",
-                "lon": "\(long)",
-                "exclude": "hourly",
-                "units": "metric" ]
+                    "lon": "\(long)",
+                    "exclude": "hourly",
+                    "units": "metric" ]
+        case .cityWeather(let city):
+            return ["appid": AppConfiguration.apiKey,
+                    "q": "\(city)" ]
         }
     }
     
