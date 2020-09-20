@@ -26,6 +26,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     private(set) lazy var imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "11d")
         return imageView
     }()

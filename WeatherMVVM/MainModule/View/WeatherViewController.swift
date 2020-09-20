@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     
     private(set) lazy var imageView: UIImageView = {
         var imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "02d")
         return imageView
     }()
