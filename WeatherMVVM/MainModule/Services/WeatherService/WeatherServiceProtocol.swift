@@ -15,5 +15,4 @@ protocol  WeatherServiceProtocol: class {
     
     func fetchCityWeather(city: String, success: @escaping (WeatherCity.CityWeather?) -> Void,
                           failure: @escaping (Error) -> Void)
-    
 }

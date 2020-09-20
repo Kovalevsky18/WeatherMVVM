@@ -14,7 +14,7 @@ enum WeatherCity {
     case success(CityWeather)
     
     struct CityWeather: Codable {
-        let list: [WeatherList]
-        let city: City
+        let list: [WeatherList]?
+        let city: City?
     }
 }

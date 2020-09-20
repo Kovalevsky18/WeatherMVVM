@@ -11,16 +11,20 @@ import CoreLocation
 
 protocol WeatherViewModelProtocol {
     var updateWeatherData: ((WeatherData)->())? {get set}
+    var updateCityWeatherData: ((WeatherCity)->())? {get set}
     func startFetch()
+    func startCityFetch(city: String)
 }
 
 final class WeatherViewModel: WeatherViewModelProtocol {
     
     private let networkService: WeatherServiceProtocol = WeatherService()
     public var updateWeatherData: ((WeatherData) -> ())?
+    public var updateCityWeatherData: ((WeatherCity) -> ())?
     
     init() {
         updateWeatherData?(.inital)
+        updateCityWeatherData?(.inital)
     }
     
     func startFetch() {
@@ -34,7 +38,7 @@ final class WeatherViewModel: WeatherViewModelProtocol {
             
             self.networkService.fetchWeather(lat: locValue.latitude, long: locValue.longitude, success: { (data) in
                 DispatchQueue.main.async {
-                    self.updateWeatherData?(.success(WeatherData.Weather(timezone: data.unsafelyUnwrapped.timezone, current: data.unsafelyUnwrapped.current, daily: data.unsafelyUnwrapped.daily)))
+                    self.updateWeatherData?(.success(WeatherData.Weather(timezone: data?.timezone, current: data?.current, daily: data?.daily)))
                 }
             })
             { (error) in
@@ -43,5 +47,14 @@ final class WeatherViewModel: WeatherViewModelProtocol {
         }
     }
     
-    
+    func startCityFetch(city: String) {
+        self.networkService.fetchCityWeather(city: city, success: { (data) in
+            DispatchQueue.main.async {
+                self.updateCityWeatherData?(.success(WeatherCity.CityWeather(list: data?.list, city: data?.city)))
+            }
+        })
+        { (error) in
+            print(error)
+        }
+    }
 }

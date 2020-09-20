@@ -43,6 +43,7 @@ extension WeatherEndpoint: Endpoint {
                     "units": "metric" ]
         case .cityWeather(let city):
             return ["appid": AppConfiguration.apiKey,
+                    "units": "metric",
                     "q": "\(city)" ]
         }
     }

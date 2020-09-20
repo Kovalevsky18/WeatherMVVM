@@ -103,8 +103,10 @@ class ViewController: UIViewController {
     
     
     var data: WeatherData.Weather?
-    
     private var viewModel: WeatherViewModelProtocol?
+    var searchCity: Bool = false
+    var cityData: WeatherCity.CityWeather?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,7 +121,7 @@ class ViewController: UIViewController {
         view.addSubview(activityView)
         viewModel = WeatherViewModel()
         viewModel?.startFetch()
-        updateViewModel()
+        updateLocationModel()
     }
     
     override func viewWillLayoutSubviews() {
@@ -167,7 +169,7 @@ class ViewController: UIViewController {
         
     }
     
-    func updateViewModel() {
+    func updateLocationModel() {
         viewModel?.updateWeatherData = { [weak self] data in
             switch data {
             case .inital:
@@ -186,17 +188,48 @@ class ViewController: UIViewController {
                     let city = weatherData.timezone
                     else { return }
                 
-                self?.imageView.image = UIImage(named: icon)
-                self?.temperatureLabel.text =  "\(String(Int(temp)))°, " + tempInfo
-                self?.cityLabel.text = city
-                
-                let shareText = "City: \(city)" +
-                "\nTemperature: \(String(temp))°, \(tempInfo) "
-                UserDefaults.standard.set(shareText, forKey: "shareText")
+                self?.updateLabels(icon: icon, temp: temp, tempInfo: tempInfo, city: city)
             }
             
             self?.collectionView.reloadData()
         }
+    }
+    
+    func updateCityModel() {
+        viewModel?.updateCityWeatherData = { [weak self] data in
+            switch data {
+            case .inital:
+                print("initial")
+            case .loading:
+                self?.blur.isHidden = false
+                self?.activityView.startAnimating()
+            case .success(let cityWeatherData):
+                self?.blur.isHidden = true
+                self?.activityView.stopAnimating()
+                
+                self?.cityData = cityWeatherData
+                
+                guard let icon = cityWeatherData.list?.first?.weather.first?.icon,
+                    let temp = cityWeatherData.list?.first?.main.temp,
+                    let tempInfo = cityWeatherData.list?.first?.weather.first?.main,
+                    let city = cityWeatherData.city?.name
+                    else { return }
+                
+                self?.updateLabels(icon: icon, temp: temp, tempInfo: tempInfo, city: city)
+            }
+            self?.collectionView.reloadData()
+        }
+    }
+    
+    func updateLabels(icon: String, temp:Double, tempInfo: String, city: String) {
+        self.imageView.image = UIImage(named: icon)
+        self.temperatureLabel.text =  "\(String(Int(temp)))°, " + tempInfo
+        self.cityLabel.text = city
+        
+        let shareText = "City: \(city)" +
+        "\nTemperature: \(String(temp))°, \(tempInfo) "
+        UserDefaults.standard.set(shareText, forKey: "shareText")
+        
     }
     
     @objc private func shareButtonAction() {
@@ -212,10 +245,12 @@ class ViewController: UIViewController {
 extension ViewController: UISearchBarDelegate,UISearchDisplayDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchCity = true
         guard let city = searchBar.text else { return }
-        print(city)
+        viewModel?.startCityFetch(city: city)
+        updateCityModel()
+        view.endEditing(true)
     }
-    
 }
 
 extension ViewController: UICollectionViewDataSource {
@@ -230,14 +265,27 @@ extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: CollectionViewCell = collectionView.dequeueReusableCell(for: indexPath)
         
-        guard let date = data?.daily?[indexPath.row].dt,
-            let icon = data?.daily?[indexPath.row].weather.first?.icon,
-            let temperature = data?.daily?[indexPath.row].temp.day
-            else{ return cell }
+        if !searchCity {
+            guard let date = data?.daily?[indexPath.row].dt,
+                let icon = data?.daily?[indexPath.row].weather.first?.icon,
+                let temperature = data?.daily?[indexPath.row].temp.day
+                else { return cell }
+            cell.imageView.image = UIImage(named: icon)
+            cell.dateLabel.text = date.weekday()
+            cell.temperatureLabel.text = String(describing: Int(temperature)) + "°"
+            
+        }
+        else {
+            guard let date = cityData?.list?[indexPath.row + 1].dt,
+                let icon = cityData?.list?[indexPath.row + 1].weather.first?.icon,
+                let temperature = cityData?.list?[indexPath.row + 1].main.temp
+                else { return cell }
+            
+            cell.imageView.image = UIImage(named: icon)
+            cell.dateLabel.text = date.weekdayAndTime()
+            cell.temperatureLabel.text = String(describing: Int(temperature)) + "°"
+        }
         
-        cell.imageView.image = UIImage(named: icon)
-        cell.dateLabel.text = date.weekday()
-        cell.temperatureLabel.text = String(describing: Int(temperature)) + "°"
         return cell
     }
 }

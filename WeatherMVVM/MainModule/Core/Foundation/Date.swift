@@ -17,4 +17,12 @@ extension Int {
         formatter.dateFormat = "EEEE"
         return formatter.string(from: date)
     }
+    
+    func weekdayAndTime() -> String {
+        let newData = TimeInterval(self)
+        let date = Date(timeIntervalSince1970: newData)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EE HH:MM"
+        return formatter.string(from: date)
+    }
 }
